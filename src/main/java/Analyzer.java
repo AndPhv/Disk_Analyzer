@@ -9,9 +9,12 @@ import java.util.Map;
 import java.nio.file.Path;
 
 public class Analyzer {
+
+    private HashMap<String, Long> sizes;
+
     public Map<String, Long> calculateDirectorySize(Path path) {
         try {
-            HashMap<String, Long> sizes = new HashMap<>();
+            sizes = new HashMap<>();
             Files.walkFileTree(
                     path,
                     new SimpleFileVisitor<Path>() {
@@ -30,6 +33,18 @@ public class Analyzer {
             return sizes;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+    private void updateDirSize(Path path, Long size)
+    {
+        String key = path.toString();
+        sizes.put(key, size + sizes.getOrDefault(key, 0L));
+
+        Path parent = path.getParent();
+
+        if (parent != null)
+        {
+            updateDirSize(path, size);
         }
     }
 }
