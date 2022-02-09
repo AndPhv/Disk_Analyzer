@@ -17,12 +17,13 @@ public class Analyzer {
                     new SimpleFileVisitor<Path>() {
                         @Override
                         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                            return super.visitFile(file, attrs);
+                            long size = Files.size(file);
+                            return FileVisitResult.CONTINUE;
                         }
 
                         @Override
                         public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                            return super.visitFileFailed(file, exc);
+                            return FileVisitResult.SKIP_SUBTREE;
                         }
                     }
             );
